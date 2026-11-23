@@ -9,4 +9,5 @@
     <string name="library">Library</string>
     <string name="tools">Tools</string>
     <string name="settings">Settings</string>
+    <string name="a11y_description">GG Space Macro &amp; Keymap: lets the app map keyboard keys to screen taps and play recorded macros.</string>
 </resources>

@@ -30,6 +30,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.BatteryChargingFull
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Build
@@ -37,6 +38,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Launch
 import androidx.compose.material.icons.filled.Memory
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -105,13 +107,16 @@ fun MainScreen(
     onRequestDnd: () -> Unit,
     canOverlay: () -> Boolean,
     canWriteSettings: () -> Boolean,
-    canControlDnd: () -> Boolean
+    canControlDnd: () -> Boolean,
+    initialTab: Int = 0
 ) {
-    var tab by remember { mutableStateOf(0) }
+    var tab by remember { mutableStateOf(initialTab) }
     val items = listOf(
         NavItem("Home", Icons.Filled.Home),
         NavItem("Library", Icons.Filled.SportsEsports),
         NavItem("Tools", Icons.Filled.Build),
+        NavItem("Macro", Icons.Filled.PlayArrow),
+        NavItem("Activate", Icons.Filled.Android),
         NavItem("Settings", Icons.Filled.Settings)
     )
 
@@ -163,7 +168,9 @@ fun MainScreen(
                     onRequestDnd = onRequestDnd,
                     canOverlay = canOverlay
                 )
-                3 -> SettingsScreen(
+                3 -> AutomateScreen()
+                4 -> ActivationScreen()
+                5 -> SettingsScreen(
                     vm = vm,
                     canOverlay = canOverlay,
                     canWriteSettings = canWriteSettings,
