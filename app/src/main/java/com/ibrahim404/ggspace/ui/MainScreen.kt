@@ -67,15 +67,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -366,14 +366,16 @@ private fun RowScope.QuickTool(label: String, icon: ImageVector, accent: Color, 
     }
 }
 
-private class DrawablePainter(private val drawable: Drawable) : Painter() {
-    override val intrinsicSize: Size
-        get() = Size(drawable.intrinsicWidth.toFloat(), drawable.intrinsicHeight.toFloat())
-
-    override fun DrawScope.onDraw() {
-        drawable.setBounds(0, 0, size.width.toInt(), size.height.toInt())
-        drawable.draw(drawContext.canvas.nativeCanvas)
-    }
+private fun drawableToBitmap(drawable: Drawable): ImageBitmap {
+    val bitmap = Bitmap.createBitmap(
+        drawable.intrinsicWidth.coerceAtLeast(1),
+        drawable.intrinsicHeight.coerceAtLeast(1),
+        Bitmap.Config.ARGB_8888
+    )
+    val canvas = android.graphics.Canvas(bitmap)
+    drawable.setBounds(0, 0, bitmap.width, bitmap.height)
+    drawable.draw(canvas)
+    return bitmap.asImageBitmap()
 }
 
 @Composable
@@ -385,7 +387,7 @@ private fun GameAvatar(pkg: String, label: String, size: Int = 48) {
     val shape = RoundedCornerShape((size / 4).dp)
     if (drawable != null) {
         Image(
-            painter = remember(drawable) { DrawablePainter(drawable) },
+            bitmap = remember(drawable) { drawableToBitmap(drawable) },
             contentDescription = label,
             modifier = Modifier.size(size.dp).clip(shape)
         )
