@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GG Space</string>
+    <string name="channel_name">Game tools</string>
+    <string name="channel_desc">Floating overlay and booster status</string>
+    <string name="overlay_notification_title">GG Space tools are active</string>
+    <string name="overlay_notification_text">Tap to open GG Space</string>
+    <string name="home">Home</string>
+    <string name="library">Library</string>
+    <string name="tools">Tools</string>
+    <string name="settings">Settings</string>
+</resources>
