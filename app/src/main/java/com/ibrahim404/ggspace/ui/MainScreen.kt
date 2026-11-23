@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -48,7 +49,6 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
@@ -67,11 +67,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import android.graphics.drawable.Drawable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -80,7 +84,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberDrawablePainter
 import com.ibrahim404.ggspace.data.Game
 import com.ibrahim404.ggspace.data.GameRepository
 import com.ibrahim404.ggspace.ui.theme.AppBackground
@@ -363,6 +366,16 @@ private fun RowScope.QuickTool(label: String, icon: ImageVector, accent: Color, 
     }
 }
 
+private class DrawablePainter(private val drawable: Drawable) : Painter() {
+    override val intrinsicSize: Size
+        get() = Size(drawable.intrinsicWidth.toFloat(), drawable.intrinsicHeight.toFloat())
+
+    override fun DrawScope.onDraw() {
+        drawable.setBounds(0, 0, size.width.toInt(), size.height.toInt())
+        drawable.draw(drawContext.canvas)
+    }
+}
+
 @Composable
 private fun GameAvatar(pkg: String, label: String, size: Int = 48) {
     val context = LocalContext.current
@@ -372,7 +385,7 @@ private fun GameAvatar(pkg: String, label: String, size: Int = 48) {
     val shape = RoundedCornerShape((size / 4).dp)
     if (drawable != null) {
         Image(
-            painter = rememberDrawablePainter(drawable = drawable),
+            painter = remember(drawable) { DrawablePainter(drawable) },
             contentDescription = label,
             modifier = Modifier.size(size.dp).clip(shape)
         )
