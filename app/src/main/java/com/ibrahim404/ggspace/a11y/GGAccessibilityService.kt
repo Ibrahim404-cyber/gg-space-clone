@@ -46,7 +46,7 @@ class GGAccessibilityService : AccessibilityService() {
         super.onServiceConnected()
         runCatching {
             serviceInfo = serviceInfo.apply {
-                flags = flags or AccessibilityServiceInfo.FLAG_REQUEST_KEY_EVENTS
+                flags = flags or AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS
             }
         }
     }

@@ -55,9 +55,9 @@ class MagnifierService : Service() {
         worker = HandlerThread("gg-magnifier").apply { start() }
         workerHandler = Handler(worker.looper)
 
-        val code = intent.getIntExtra(MediaProjectionManager.EXTRA_RESULT_CODE, -1)
+        val code = getIntent().getIntExtra("capture_code", -1)
         @Suppress("DEPRECATION")
-        val data: Intent? = intent.getParcelableExtra(MediaProjectionManager.EXTRA_RESULT_DATA)
+        val data: Intent? = getIntent().getParcelableExtra("capture_data")
         if (code == -1 || data == null) {
             stopSelf()
             return

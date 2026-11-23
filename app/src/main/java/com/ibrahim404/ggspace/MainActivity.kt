@@ -31,8 +31,8 @@ class MainActivity : ComponentActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK && result.data != null) {
                 val intent = Intent(this, MagnifierService::class.java).apply {
-                    putExtra(MediaProjectionManager.EXTRA_RESULT_CODE, result.resultCode)
-                    putExtra(MediaProjectionManager.EXTRA_RESULT_DATA, result.data)
+                    putExtra("capture_code", result.resultCode)
+                    putExtra("capture_data", result.data)
                 }
                 runCatching { ContextCompat.startForegroundService(this, intent) }
             }

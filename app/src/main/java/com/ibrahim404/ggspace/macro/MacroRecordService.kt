@@ -40,7 +40,7 @@ class MacroRecordService : Service() {
     override fun onCreate() {
         super.onCreate()
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-        mode = intent.getStringExtra("mode") ?: MODE_RECORD
+        mode = getIntent().getStringExtra("mode") ?: MODE_RECORD
         startAsForeground()
         buildTouchLayer()
         buildControls()
