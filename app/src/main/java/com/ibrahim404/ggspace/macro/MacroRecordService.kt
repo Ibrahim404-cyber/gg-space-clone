@@ -36,17 +36,22 @@ class MacroRecordService : Service() {
     private var downY = 0
     private var downTime = 0L
     private var lastEnd = 0L
+    private var initialized = false
 
     override fun onCreate() {
         super.onCreate()
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-        mode = getIntent().getStringExtra("mode") ?: MODE_RECORD
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (initialized) return START_NOT_STICKY
+        initialized = true
+        mode = intent?.getStringExtra("mode") ?: MODE_RECORD
         startAsForeground()
         buildTouchLayer()
         buildControls()
+        return START_NOT_STICKY
     }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = START_NOT_STICKY
 
     override fun onBind(intent: Intent?): IBinder? = null
 

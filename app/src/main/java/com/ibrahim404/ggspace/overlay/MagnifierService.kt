@@ -47,25 +47,31 @@ class MagnifierService : Service() {
     private val mainHandler = Handler(Looper.getMainLooper())
     private lateinit var worker: HandlerThread
     private var workerHandler: Handler? = null
+    private var initialized = false
 
     override fun onCreate() {
         super.onCreate()
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (initialized) return START_NOT_STICKY
+        initialized = true
         startAsForeground()
         worker = HandlerThread("gg-magnifier").apply { start() }
         workerHandler = Handler(worker.looper)
 
-        val code = getIntent().getIntExtra("capture_code", -1)
+        val code = intent?.getIntExtra("capture_code", -1) ?: -1
         @Suppress("DEPRECATION")
-        val data: Intent? = getIntent().getParcelableExtra("capture_data")
+        val data: Intent? = intent?.getParcelableExtra("capture_data")
         if (code == -1 || data == null) {
             stopSelf()
-            return
+            return START_NOT_STICKY
         }
         val manager = getSystemService(MediaProjectionManager::class.java)
         projection = runCatching { manager.getMediaProjection(code, data) }.getOrElse {
             stopSelf()
-            return
+            return START_NOT_STICKY
         }
 
         val metrics = resources.displayMetrics
@@ -86,9 +92,8 @@ class MagnifierService : Service() {
         )
 
         buildOverlay()
+        return START_NOT_STICKY
     }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = START_NOT_STICKY
 
     override fun onBind(intent: Intent?): IBinder? = null
 
