@@ -372,7 +372,7 @@ private class DrawablePainter(private val drawable: Drawable) : Painter() {
 
     override fun DrawScope.onDraw() {
         drawable.setBounds(0, 0, size.width.toInt(), size.height.toInt())
-        drawable.draw(drawContext.canvas)
+        drawable.draw(drawContext.canvas.nativeCanvas)
     }
 }
 
